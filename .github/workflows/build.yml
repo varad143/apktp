@@ -10,10 +10,10 @@ jobs:
     steps : 
       - uses : actions/checkout@v2
 
-      - name : Get date 
+      - name : Get Date 
         id: get-date
         run :
-          echo "::set-output name=date::$(/bin/date-u "+%Y%m%d")"
+          echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
         shell : bash 
 
       - name : Cache Buildozer global directory
@@ -25,7 +25,7 @@ jobs:
       - uses : action/cache@v2
         with:
           path: .buildozer
-          key: ${{ runner.os}}-${{ steps.get-date.ouputs.date }}-${{hashfiles('buildozer.spec')}}
+          key: ${{ runner.os}}-${{ steps.get-date.ouputs.date }}-${{ hashFiles('buildozer.spec')}}
           
       - name : Build with Buildozer 
         uses: ArtemSBulgakov/buildozer-action@v1
@@ -34,11 +34,6 @@ jobs:
           command : buildozer android debug
           buildozer_version: master 
 
-      - name : Upload artifacts 
-        uses : actions/uploads-artifacts@v2
-        with:
-          name : package
-          path: ${{ steps.buildozer.output.filename}}
 
 
 
